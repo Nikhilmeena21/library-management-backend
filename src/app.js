@@ -4,6 +4,7 @@ dotenv.config();
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const MongoStore = require('connect-mongo'); 
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const { apiV1 } = require("./routes");
@@ -52,8 +53,16 @@ app.use(
       sameSite: "lax",
     },
     resave: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI, // Use your MongoDB connection string
+      // You can add more options here if needed, like:
+      // crypto: {
+      //   secret: 'your-secret' // For encrypting session data (optional but recommended)
+      // }
+    })
   })
 );
+
 
 // API Routes
 app.use("/v1", apiV1);
